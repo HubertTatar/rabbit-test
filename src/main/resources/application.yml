@@ -1,0 +1,38 @@
+spring:
+  #template
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: rabbit
+    password: rabbit
+    virtual-host: /
+  #scs
+  cloud:
+    stream:
+      bindings:
+        queue-test-input:
+          destination: queue.test
+          binder: local_rabbit
+        queue-test-output:
+          destination: queue.test
+          binder: local_rabbit
+      default:
+        contentType: application/json
+      binders:
+        local_rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: 127.0.0.1
+                port: 5672
+                username: rabbit
+                password: rabbit
+                virtual-host: /
+      rabbit:
+        bindings:
+          queue-test-output:
+            consumer:
+              auto-bind-dlq: false
+            producer:
+              transacted: true
